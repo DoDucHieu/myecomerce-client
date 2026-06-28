@@ -27,12 +27,9 @@ export function LoginForm() {
         throw new Error(message || "Login failed");
       }
 
-      const data = await res.json();
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
+      await res.json();
 
-      router.push("/");
+      router.push("/user-info");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {

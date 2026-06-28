@@ -4,7 +4,7 @@ const KEYCLOAK_AUTH_URL =
   "http://localhost:9090/realms/myrealm/protocol/openid-connect/auth" +
   "?client_id=myclient" +
   "&redirect_uri=" +
-  encodeURIComponent("http://localhost:3000") +
+  encodeURIComponent("http://localhost:8080/auth/oidc-callback") +
   "&response_type=code" +
   "&scope=openid";
 
