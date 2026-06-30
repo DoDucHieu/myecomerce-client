@@ -9,8 +9,9 @@ import {
   AuthInput,
 } from "@/app/components/auth/auth-card";
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,10 +23,10 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name, email, password }),
       });
 
       const data = await res.json();
@@ -34,11 +35,10 @@ export function LoginForm() {
         const detail =
           data.errors?.map((e: { message: string }) => e.message).join(". ") ||
           data.message;
-        throw new Error(detail || "Login failed");
+        throw new Error(detail || "Registration failed");
       }
 
-      router.push("/account");
-      router.refresh();
+      router.push("/login?registered=1");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -48,6 +48,14 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <AuthInput
+        id="name"
+        label="Full name"
+        autoComplete="name"
+        required
+        value={name}
+        onChange={setName}
+      />
       <AuthInput
         id="email"
         label="Email"
@@ -61,22 +69,23 @@ export function LoginForm() {
         id="password"
         label="Password"
         type="password"
-        autoComplete="current-password"
+        autoComplete="new-password"
         required
         value={password}
         onChange={setPassword}
+        hint="At least 6 characters"
       />
       {error && <AuthError message={error} />}
       <AuthButton loading={loading}>
-        {loading ? "Signing in…" : "Sign in with email"}
+        {loading ? "Creating account…" : "Create account"}
       </AuthButton>
       <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Don&apos;t have an account?{" "}
+        Already have an account?{" "}
         <Link
-          href="/register"
+          href="/login"
           className="font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400"
         >
-          Create one
+          Sign in
         </Link>
       </p>
     </form>

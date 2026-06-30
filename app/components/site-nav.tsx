@@ -1,51 +1,68 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { getAccessToken } from "@/lib/auth/cookies";
 
-const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/login", label: "Login" },
-  { href: "/user-info", label: "User Info" },
-];
-
-export function SiteNav() {
-  const pathname = usePathname();
+export async function SiteNav() {
+  const token = await getAccessToken();
+  const isLoggedIn = Boolean(token);
 
   return (
-    <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
-      <nav className="mx-auto flex h-14 max-w-5xl items-center gap-6 px-4">
-        <Link
-          href="/"
-          className="text-sm font-semibold text-zinc-900 dark:text-zinc-50"
-        >
-          My Ecommerce
-        </Link>
+    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
+      <nav className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-6 px-4">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white">
+              M
+            </span>
+            <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+              My Ecommerce
+            </span>
+          </Link>
 
-        <ul className="flex items-center gap-1">
-          {navItems.map((item) => {
-            const isActive =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+          <ul className="hidden items-center gap-1 sm:flex">
+            <NavLink href="/" label="Home" />
+            {isLoggedIn && <NavLink href="/account" label="My Account" />}
+          </ul>
+        </div>
 
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50"
-                      : "text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="flex items-center gap-2">
+          {isLoggedIn ? (
+            <Link
+              href="/account"
+              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+            >
+              Account
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900"
+              >
+                Sign in
+              </Link>
+              <Link
+                href="/register"
+                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-700"
+              >
+                Register
+              </Link>
+            </>
+          )}
+        </div>
       </nav>
     </header>
+  );
+}
+
+function NavLink({ href, label }: { href: string; label: string }) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+      >
+        {label}
+      </Link>
+    </li>
   );
 }
