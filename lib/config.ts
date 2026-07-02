@@ -15,7 +15,7 @@ export const KEYCLOAK_AUTH_URL =
   `http://localhost:9090/realms/${KEYCLOAK_REALM}/protocol/openid-connect/auth`;
 
 export function getKeycloakLoginUrl(): string {
-  const redirectUri = `${APP_BASE_URL}/api/auth/oidc-callback`;
+  const redirectUri = `${API_BASE_URL}/auth/oidc-callback`;
   const params = new URLSearchParams({
     client_id: KEYCLOAK_CLIENT_ID,
     redirect_uri: redirectUri,
