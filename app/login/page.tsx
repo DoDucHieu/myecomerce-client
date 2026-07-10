@@ -6,6 +6,8 @@ import { LoginAlerts } from "./login-alerts";
 
 export default function LoginPage() {
   const keycloakUrl = getKeycloakLoginUrl();
+  console.log("keycloakUrl", keycloakUrl);
+  
   return (
     <AuthCard
       title="Welcome back"

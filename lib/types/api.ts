@@ -51,6 +51,35 @@ export type UserResponse = {
   name: string;
 };
 
+export type CreateUserRequest = {
+  email: string;
+  name: string;
+  passwordHash: string;
+};
+
+export type CreateUserResponse = {
+  id: string;
+  email: string;
+  name: string;
+};
+
+export type UpdateUserRequest = {
+  email: string;
+  name: string;
+};
+
+export type UpdateUserResponse = {
+  id: string;
+  email: string;
+  name: string;
+};
+
+export type GetUsersParams = {
+  page: number;
+  size: number;
+  search?: string;
+};
+
 export type PaginationResponse<T> = {
   data: T[];
   page: number;

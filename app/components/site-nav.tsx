@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { getAccessToken } from "@/lib/auth/cookies";
+import { getAdminSession } from "@/lib/auth/require-admin";
 
 export async function SiteNav() {
   const token = await getAccessToken();
   const isLoggedIn = Boolean(token);
+  const adminSession = isLoggedIn ? await getAdminSession() : null;
+  const isAdmin = Boolean(adminSession);
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
@@ -21,6 +24,7 @@ export async function SiteNav() {
           <ul className="hidden items-center gap-1 sm:flex">
             <NavLink href="/" label="Home" />
             {isLoggedIn && <NavLink href="/account" label="My Account" />}
+            {isAdmin && <NavLink href="/admin/users" label="Users" />}
           </ul>
         </div>
 
